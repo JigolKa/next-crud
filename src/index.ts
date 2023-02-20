@@ -9,7 +9,7 @@ import { Prisma } from "@prisma/client";
 import { json } from "./helpers/url";
 import getFilename from "./helpers/getFilename";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import omitDeep from "omit-deep-lodash";
+import omitDeep from "./helpers/exclude";
 
 function ApiWrapper(options: Api.GlobalOptions) {
   if (typeof Prisma["dmmf"] === "undefined") {
@@ -31,12 +31,14 @@ function ApiWrapper(options: Api.GlobalOptions) {
     if (isBodyRequired(method as Method)) {
       if (req.headers["content-type"] !== "application/json") {
         return res.status(415).json({
+          ...json(415),
           errorText: "Unsupported Media Type",
         });
       }
 
       if (!req.body) {
         return res.status(400).json({
+          ...json(400),
           errorText: "Malformed body",
         });
       }
@@ -55,18 +57,18 @@ function ApiWrapper(options: Api.GlobalOptions) {
         const callbackResult = await options.authentication.callback({ req });
 
         if (!callbackResult)
-          return res.status(403).json({
-            errorText: "Access forbidden",
-          });
+          return res
+            .status(403)
+            .json({ ...json(403), errorText: "Access forbidden" });
       }
     }
 
     const args = getArguments(req);
 
     if (!args || !args.table)
-      return res.status(422).json({
-        errorText: "Missing required url arguments",
-      });
+      return res
+        .status(422)
+        .json({ ...json(422), errorText: "Missing required url arguments" });
 
     const extraOptions: Record<string, any> = options.tables ?? {};
 
@@ -169,9 +171,9 @@ function ApiWrapper(options: Api.GlobalOptions) {
       );
 
       if (!action)
-        return res.status(405).json({
-          errorText: "Method not allowed.",
-        });
+        return res
+          .status(405)
+          .json({ ...json(405), errorText: "Method not allowed." });
 
       const response = await action(
         { req, res },
@@ -187,14 +189,20 @@ function ApiWrapper(options: Api.GlobalOptions) {
 
       if (data instanceof Array) {
         for (let i = 0; i < data.length; i++) {
-          const v = omitDeep(data[i], ...hiddenKeys.map((v) => v.key));
+          const v = omitDeep(
+            data[i],
+            hiddenKeys.map((v) => v.key)
+          );
 
           data[i] = v;
         }
       } else if (typeof data === "object") {
         const v = { ...data };
 
-        data = omitDeep(v, ...hiddenKeys.map((v) => v.key));
+        data = omitDeep(
+          v,
+          hiddenKeys.map((v) => v.key)
+        );
       }
 
       options.callbacks?.onSuccess?.(data);
