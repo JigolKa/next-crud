@@ -1,0 +1,32 @@
+{
+  "name": "@jigolka/next-crud",
+  "version": "1.0.2",
+  "description": "Automate CRUD operations with Prisma and Next.js!",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "keywords": [
+    "crud",
+    "next",
+    "next.js",
+    "prisma",
+    "orm"
+  ],
+  "author": "JigolKa",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^4.10.1",
+    "next": "^13.1.6",
+    "omit-deep-lodash": "^1.1.7",
+    "react": "^18.2.0",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "@types/omit-deep-lodash": "^1.1.1"
+  }
+}
