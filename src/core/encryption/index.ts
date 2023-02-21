@@ -1,3 +1,4 @@
+import logging from "../../helpers/logging";
 import { SupportedEncryptionAlgorithms } from "../../types";
 import { AES } from "./algorithms/AES";
 import { decrypt, encrypt } from "./algorithms/TripleDES";
@@ -9,7 +10,10 @@ export function algorithms(
 ): (v: string) => string {
   const key = process.env["MD5_HASH"];
 
-  if (!key) throw new Error("MD5_HASH not defined in environnement variables.");
+  if (!key) {
+    logging("BgRed", "MD5_HASH not defined in environnement variables.");
+    throw new Error("MD5_HASH not defined in environnement variables.");
+  }
 
   const methods: Record<
     SupportedEncryptionAlgorithms,

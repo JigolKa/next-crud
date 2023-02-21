@@ -1,19 +1,21 @@
 import { ActionOutput } from "..";
+import logging from "../../../helpers/logging";
 import {
   Api,
-  RoutePayloadObject,
+  RouteContext,
   SupportedEncryptionAlgorithms,
 } from "../../../types";
 import { algorithms } from "../../encryption";
 
 export default async function verify(
-  { req }: RoutePayloadObject,
-  { table: _table }: Api.MethodArguments,
+  { req }: RouteContext,
+  { table: _table }: Api.MethodContext,
   options: Api.GlobalOptions
 ): Promise<ActionOutput> {
-  const { tables } = options;
-  const table = tables?.[_table];
-  if (!tables || !table) return { statusCode: 404, errorText: "Not found" };
+  const { extraOptions } = options;
+  const table = extraOptions?.[_table];
+  if (!extraOptions || !table)
+    return { statusCode: 404, errorText: "Not found" };
 
   const encryptedFields = Object.keys(table);
 
@@ -43,6 +45,7 @@ export default async function verify(
         const decrypt = encryptionAlgorithm["encrypt"];
 
         if (!decrypt) {
+          logging("BgRed", "Decryption method not set");
           throw new Error("Decryption method not set");
         }
 

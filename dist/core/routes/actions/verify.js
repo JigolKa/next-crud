@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const logging_1 = require("../../../helpers/logging");
 const encryption_1 = require("../../encryption");
 async function verify({ req }, { table: _table }, options) {
-    const { tables } = options;
-    const table = tables?.[_table];
-    if (!tables || !table)
+    const { extraOptions } = options;
+    const table = extraOptions?.[_table];
+    if (!extraOptions || !table)
         return { statusCode: 404, errorText: "Not found" };
     const encryptedFields = Object.keys(table);
     for (let i = 0; i < Object.keys(req.body).length; i++) {
@@ -26,6 +27,7 @@ async function verify({ req }, { table: _table }, options) {
             else {
                 const decrypt = encryptionAlgorithm["encrypt"];
                 if (!decrypt) {
+                    (0, logging_1.default)("BgRed", "Decryption method not set");
                     throw new Error("Decryption method not set");
                 }
                 decrypted = decrypt(payload[v]);

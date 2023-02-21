@@ -1,10 +1,11 @@
-import { Api, RoutePayloadObject, Table } from "../../../types";
+import { Api, RouteContext, Table } from "../../../types";
 import { algorithms } from "../../encryption";
 import { ActionOutput } from "..";
+import logging from "../../../helpers/logging";
 
 export default async function create(
-  { req }: RoutePayloadObject,
-  { table, requiredFields }: Api.MethodArguments,
+  { req }: RouteContext,
+  { table, requiredFields }: Api.MethodContext,
   options: Api.GlobalOptions,
   filter: Api.FilterOptions
 ): Promise<ActionOutput> {
@@ -36,7 +37,7 @@ export default async function create(
     payload[element] = obj ? obj : undefined;
   }
 
-  const tables = options.tables;
+  const tables = options.extraOptions;
   const _table = tables?.[table];
 
   if (tables && _table) {
@@ -59,6 +60,7 @@ export default async function create(
         const encrypt = v.encryption["encrypt"];
 
         if (!encrypt) {
+          logging("BgRed", "Encryption method not set");
           throw new Error("Encryption method not set");
         }
 

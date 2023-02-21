@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getKeys = exports.getPrimaryKey = void 0;
+exports.getRelationKeys = exports.getKeys = exports.getPrimaryKey = void 0;
 const client_1 = require("@prisma/client");
 function getPrimaryKey(table) {
     return (client_1.Prisma.dmmf.datamodel.models
@@ -16,4 +16,11 @@ function getKeys(table) {
         .fields.map((v) => v.name);
 }
 exports.getKeys = getKeys;
+function getRelationKeys(table) {
+    return client_1.Prisma.dmmf.datamodel.models
+        .filter((v) => v.name.toLowerCase() === table.toLowerCase())[0]
+        .fields.filter((v) => v.relationName)
+        .map((v) => v.name);
+}
+exports.getRelationKeys = getRelationKeys;
 //# sourceMappingURL=dmmf.js.map

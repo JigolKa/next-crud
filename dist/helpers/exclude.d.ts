@@ -1,1 +1,1 @@
-export default function deepExclude(obj: Record<any, any>, keys: string[]): Record<any, any>;
+export default function omitDeep(input: object, props: string[]): object;

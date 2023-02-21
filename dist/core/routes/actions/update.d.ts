@@ -1,3 +1,3 @@
-import { Api, RoutePayloadObject } from "../../../types";
+import { Api, RouteContext } from "../../../types";
 import { ActionOutput } from "..";
-export default function update({ req }: RoutePayloadObject, { table, ids, canBeUpdated }: Api.MethodArguments, options: Api.GlobalOptions, filter: Api.FilterOptions): Promise<ActionOutput>;
+export default function update({ req }: RouteContext, { table, id, canBeUpdated }: Api.MethodContext, options: Api.GlobalOptions, filter: Api.FilterOptions): Promise<ActionOutput>;

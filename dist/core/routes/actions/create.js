@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const encryption_1 = require("../../encryption");
+const logging_1 = require("../../../helpers/logging");
 async function create({ req }, { table, requiredFields }, options, filter) {
     const requiredFieldsArray = requiredFields.map((v) => v.name);
     const fieldsArray = Object.keys(req.body);
@@ -21,7 +22,7 @@ async function create({ req }, { table, requiredFields }, options, filter) {
         const obj = req.body[element];
         payload[element] = obj ? obj : undefined;
     }
-    const tables = options.tables;
+    const tables = options.extraOptions;
     const _table = tables?.[table];
     if (tables && _table) {
         const encryptedFields = Object.keys(_table)
@@ -40,6 +41,7 @@ async function create({ req }, { table, requiredFields }, options, filter) {
             else {
                 const encrypt = v.encryption["encrypt"];
                 if (!encrypt) {
+                    (0, logging_1.default)("BgRed", "Encryption method not set");
                     throw new Error("Encryption method not set");
                 }
                 field = encrypt(payload[v.key]);

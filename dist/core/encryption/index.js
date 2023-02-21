@@ -1,14 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.algorithms = void 0;
+const logging_1 = require("../../helpers/logging");
 const AES_1 = require("./algorithms/AES");
 const TripleDES_1 = require("./algorithms/TripleDES");
 function algorithms(algorithm, type
 // eslint-disable-next-line
 ) {
     const key = process.env["MD5_HASH"];
-    if (!key)
+    if (!key) {
+        (0, logging_1.default)("BgRed", "MD5_HASH not defined in environnement variables.");
         throw new Error("MD5_HASH not defined in environnement variables.");
+    }
     const methods = {
         "AES 128": {
             decryption: (v) => new AES_1.AES(128, key).decrypt(v),

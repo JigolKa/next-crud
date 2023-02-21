@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ParsedArgs } from "./helpers/actions";
 export type Table = Exclude<keyof PrismaClient, `$${string}`>;
 export type Operation<T extends Table = Table> = keyof PrismaClient[T];
-export type RoutePayloadObject = {
+export type RouteContext = {
     req: NextApiRequest;
     res: NextApiResponse;
 };
@@ -20,6 +20,7 @@ type DecryptionCallback = (encryptedValue: string) => PromiseLike<string>;
 type TablesArguments<T extends Table, O extends Operation<T>, A> = Partial<{
     [key in Table]: Partial<ModifyValues<PrismaParameters<key, O>, A>>;
 }>;
+type AuthenticationCallback = (request: Pick<RouteContext, "req">) => PromiseLike<boolean>;
 export declare namespace Api {
     type RowOptions = {
         /**
@@ -42,7 +43,7 @@ export declare namespace Api {
          */
         hide?: boolean;
     };
-    export type MethodArguments = ParsedArgs & {
+    type MethodContext = ParsedArgs & {
         requiredFields: {
             name: string;
             type: string;
@@ -54,11 +55,10 @@ export declare namespace Api {
             isUnique: boolean;
         }[];
     };
-    type AuthenticationCallback = (request: Pick<RoutePayloadObject, "req">) => PromiseLike<boolean>;
-    export type FilterOptions = Record<string, Record<string, boolean | object | number> | number>;
-    export type GlobalOptions = WithRequired<Partial<{
+    type FilterOptions = Record<string, Record<string, boolean | object | number> | number>;
+    type GlobalOptions = WithRequired<Partial<{
         callbacks: {
-            onRequest?: (payload: RoutePayloadObject) => void;
+            onRequest?: (payload: RouteContext) => void;
             onSuccess?: (payload: unknown) => void;
             onError?: <T>(error: Error & T) => void;
         };
@@ -74,7 +74,7 @@ export declare namespace Api {
          *
          * Current features: `encryption`, `hide` and `dontUpdate`
          */
-        tables: TablesArguments<Table, "create", RowOptions>;
+        extraOptions: TablesArguments<Table, "create", RowOptions>;
         /**
          * Main instance of Prisma
          */
@@ -108,7 +108,6 @@ export declare namespace Api {
             ignoredRoutes?: string[];
         };
     }>, "prismaInstance">;
-    export {};
 }
 type ApiWrapper = Api.GlobalOptions;
 export default ApiWrapper;

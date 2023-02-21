@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const dmmf_1 = require("../../../helpers/dmmf");
-async function fetch(_payload, { table, ids }, options, filter) {
-    if (ids.length >= 1) {
+async function fetch(_payload, { table, id }, options, filter) {
+    if (id) {
         return {
             statusCode: 200,
             json: await options.prismaInstance[table].findFirst({
                 where: {
-                    [(0, dmmf_1.getPrimaryKey)(table)]: ids[0],
+                    [(0, dmmf_1.getPrimaryKey)(table)]: id,
                 },
                 ...filter,
             }),
@@ -26,22 +26,13 @@ async function fetch(_payload, { table, ids }, options, filter) {
             errorText,
         };
     }
-    try {
-        const json = await options.prismaInstance[table].findMany({
-            ...filter,
-        });
-        return {
-            statusCode: 200,
-            json,
-        };
-    }
-    catch (error) {
-        return {
-            statusCode: 500,
-            errorText: "An unexpected error occured",
-            json: error.meta,
-        };
-    }
+    const json = await options.prismaInstance[table].findMany({
+        ...filter,
+    });
+    return {
+        statusCode: 200,
+        json,
+    };
 }
 exports.default = fetch;
 //# sourceMappingURL=fetch.js.map

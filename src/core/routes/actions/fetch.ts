@@ -1,19 +1,19 @@
-import { Api, RoutePayloadObject } from "../../../types";
+import { Api, RouteContext } from "../../../types";
 import { getPrimaryKey } from "../../../helpers/dmmf";
 import { ActionOutput } from "..";
 
 export default async function fetch(
-  _payload: RoutePayloadObject,
-  { table, ids }: Api.MethodArguments,
+  _payload: RouteContext,
+  { table, id }: Api.MethodContext,
   options: Api.GlobalOptions,
   filter: Api.FilterOptions
 ): Promise<ActionOutput> {
-  if (ids.length >= 1) {
+  if (id) {
     return {
       statusCode: 200,
       json: await (options.prismaInstance[table].findFirst as any)({
         where: {
-          [getPrimaryKey(table)]: ids[0],
+          [getPrimaryKey(table)]: id,
         },
         ...filter,
       }),
@@ -40,19 +40,11 @@ export default async function fetch(
     };
   }
 
-  try {
-    const json = await (options.prismaInstance[table].findMany as any)({
-      ...filter,
-    });
-    return {
-      statusCode: 200,
-      json,
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      errorText: "An unexpected error occured",
-      json: (error as unknown as any).meta,
-    };
-  }
+  const json = await (options.prismaInstance[table].findMany as any)({
+    ...filter,
+  });
+  return {
+    statusCode: 200,
+    json,
+  };
 }

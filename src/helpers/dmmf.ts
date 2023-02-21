@@ -16,3 +16,10 @@ export function getKeys(table: Table) {
     .filter((v) => v.name.toLowerCase() === table.toLowerCase())[0]
     .fields.map((v) => v.name);
 }
+
+export function getRelationKeys(table: Table) {
+  return Prisma.dmmf.datamodel.models
+    .filter((v) => v.name.toLowerCase() === table.toLowerCase())[0]
+    .fields.filter((v) => v.relationName)
+    .map((v) => v.name);
+}

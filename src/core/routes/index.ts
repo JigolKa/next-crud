@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { Api, Method, RoutePayloadObject } from "../../types";
+import { Api, Method, RouteContext } from "../../types";
 import del from "./actions/delete";
 import fetch from "./actions/fetch";
 import update from "./actions/update";
@@ -8,8 +8,8 @@ import create from "./actions/create";
 import verify from "./actions/verify";
 
 export type ActionSignature = (
-  request: RoutePayloadObject,
-  args: Api.MethodArguments,
+  request: RouteContext,
+  args: Api.MethodContext,
   options: Api.GlobalOptions,
   filter: Api.FilterOptions
 ) => Promise<ActionOutput>;

@@ -1,14 +1,14 @@
-import { Api, RoutePayloadObject, Table } from "../../../types";
+import { Api, RouteContext, Table } from "../../../types";
 import { getPrimaryKey } from "../../../helpers/dmmf";
 import { ActionOutput } from "..";
 
 export default async function update(
-  { req }: RoutePayloadObject,
-  { table, ids, canBeUpdated }: Api.MethodArguments,
+  { req }: RouteContext,
+  { table, id, canBeUpdated }: Api.MethodContext,
   options: Api.GlobalOptions,
   filter: Api.FilterOptions
 ): Promise<ActionOutput> {
-  if (ids.length < 0) {
+  if (id) {
     return {
       statusCode: 422,
       errorText: "Missing required url arguments",
@@ -33,24 +33,16 @@ export default async function update(
     payload[element] = req.body[element];
   }
 
-  try {
-    const json = await (options.prismaInstance[table as Table].update as any)({
-      where: {
-        [getPrimaryKey(table)]: ids[0],
-      },
-      data: payload,
-      ...filter,
-    });
+  const json = await (options.prismaInstance[table as Table].update as any)({
+    where: {
+      [getPrimaryKey(table)]: id,
+    },
+    data: payload,
+    ...filter,
+  });
 
-    return {
-      statusCode: 200,
-      json,
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      errorText: "An unexpected error occured",
-      json: (error as unknown as any).meta,
-    };
-  }
+  return {
+    statusCode: 200,
+    json,
+  };
 }

@@ -1,5 +1,5 @@
 // Typescript will throw an error since Prisma has not generated any types
-// @ts-ignore
+//@ts-nocheck
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ParsedArgs } from "./helpers/actions";
@@ -8,7 +8,7 @@ export type Table = Exclude<keyof PrismaClient, `$${string}`>;
 
 export type Operation<T extends Table = Table> = keyof PrismaClient[T];
 
-export type RoutePayloadObject = {
+export type RouteContext = {
   req: NextApiRequest;
   res: NextApiResponse;
 };
@@ -17,7 +17,6 @@ type ModifyValues<O extends object, V extends unknown> = Record<keyof O, V>;
 
 type PrismaParameters<T extends Table, O extends Operation<T>> = Parameters<
   PrismaClient[T][O]
-  //@ts-ignore
 >[0]["data"];
 
 export type PromiseLike<T> = Promise<T> | T;
@@ -38,8 +37,12 @@ type TablesArguments<T extends Table, O extends Operation<T>, A> = Partial<{
   [key in Table]: Partial<ModifyValues<PrismaParameters<key, O>, A>>;
 }>;
 
+type AuthenticationCallback = (
+  request: Pick<RouteContext, "req">
+) => PromiseLike<boolean>;
+
 export namespace Api {
-  type RowOptions = {
+  export type RowOptions = {
     /**
      * Encryption algorithm used to encrypt your fields
      *
@@ -65,7 +68,7 @@ export namespace Api {
     hide?: boolean;
   };
 
-  export type MethodArguments = ParsedArgs & {
+  export type MethodContext = ParsedArgs & {
     requiredFields: {
       name: string;
       type: string;
@@ -78,10 +81,6 @@ export namespace Api {
     }[];
   };
 
-  type AuthenticationCallback = (
-    request: Pick<RoutePayloadObject, "req">
-  ) => PromiseLike<boolean>;
-
   export type FilterOptions = Record<
     string,
     Record<string, boolean | object | number> | number
@@ -90,7 +89,7 @@ export namespace Api {
   export type GlobalOptions = WithRequired<
     Partial<{
       callbacks: {
-        onRequest?: (payload: RoutePayloadObject) => void;
+        onRequest?: (payload: RouteContext) => void;
         onSuccess?: (payload: unknown) => void;
         onError?: <T>(error: Error & T) => void;
       };
@@ -115,7 +114,7 @@ export namespace Api {
        *
        * Current features: `encryption`, `hide` and `dontUpdate`
        */
-      tables: TablesArguments<Table, "create", RowOptions>;
+      extraOptions: TablesArguments<Table, "create", RowOptions>;
 
       /**
        * Main instance of Prisma

@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Api } from "./types";
-declare function ApiWrapper(options: Api.GlobalOptions): (req: NextApiRequest, res: NextApiResponse) => Promise<any>;
+type Handler = (req: NextApiRequest, res: NextApiResponse<object[] | object>) => Promise<void>;
+declare function ApiWrapper(options: Api.GlobalOptions): Handler;
 export { ApiWrapper };
