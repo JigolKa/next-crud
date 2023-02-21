@@ -10,6 +10,8 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import omitDeep from "./helpers/exclude";
 import { getKeys, getRelationKeys } from "./helpers/dmmf";
 import logging, { loggingColors } from "./helpers/logging";
+import hideFields from "./core/features/hide";
+import filter, { FilterError } from "./core/features/filter";
 
 // Typescript will throw a bunch of errors since Prisma has not generated any types
 
@@ -121,96 +123,10 @@ function ApiWrapper(options: Api.GlobalOptions): Handler {
       }
     }
 
-    const prismaArgs = { ...req.query };
-    const prismaPayload: Api.FilterOptions = {};
-    delete prismaArgs[getEndpoint(req)];
+    const prismaFilter = filter({ currentTable: currentTable.name, req, args });
 
-    const tableKeys = getKeys(args.table);
-
-    for (const filter of Object.keys(prismaArgs)) {
-      if (!["include", "select", "skip", "take"].includes(filter)) continue;
-
-      const arg = req.query[filter] as string;
-      let obj: Record<string, boolean | object> | number = {};
-
-      if (["include", "select"].includes(filter)) {
-        for (const _key of arg.split(",")) {
-          const parts = _key.split(".");
-          if (!tableKeys.includes(parts[parts.length - 1])) {
-            logging(
-              "BgRed",
-              "Key `" +
-                parts[parts.length - 1] +
-                "` not found on table " +
-                currentTable.name
-            );
-            return res.status(404).json({
-              ...json(404),
-              errorText:
-                "Key `" +
-                parts[parts.length - 1] +
-                "` not found on table " +
-                currentTable.name,
-            });
-          }
-
-          if (
-            filter === "include" &&
-            !getRelationKeys(currentTable.name.toLowerCase() as Table).includes(
-              _key
-            )
-          ) {
-            logging(
-              "BgRed",
-              "The include filter only accepts fields with a relation"
-            );
-
-            return res.status(422).json({
-              ...json(422),
-              errorText:
-                "The include filter only accepts fields with a relation",
-            });
-          }
-
-          let data: object | boolean = true;
-
-          if (parts.length > 1) {
-            data = {
-              [filter]: {
-                [parts[1]]: true,
-              },
-            };
-          }
-
-          //TODO: decomment and fix
-
-          obj[parts[0]] = data;
-        }
-      } else {
-        if (!isNaN(Number(arg))) {
-          obj = Number(arg) || 1;
-        } else {
-          continue;
-        }
-      }
-
-      prismaPayload[filter] = obj;
-    }
-
-    console.log(prismaPayload);
-
-    if (
-      Object.keys(prismaPayload).includes("include") &&
-      Object.keys(prismaPayload).includes("select")
-    ) {
-      logging(
-        "BgRed",
-        "Your query cannot contain the select and the include filter. You have to take only one"
-      );
-      return res.status(422).json({
-        ...json(422),
-        data: "Your query cannot contain the select and the include filter. You have to take only one",
-      });
+    if (prismaFilter.errorText) {
+      return res.status((<FilterError>prismaFilter).status).json(prismaFilter);
     }
 
     // ^4.10.1
@@ -251,7 +167,7 @@ function ApiWrapper(options: Api.GlobalOptions): Handler {
         { req, res },
         { ...args, requiredFields: required, canBeUpdated },
         options,
-        prismaPayload
+        prismaFilter as Api.FilterOptions
       );
 
       let data =
@@ -259,23 +175,10 @@ function ApiWrapper(options: Api.GlobalOptions): Handler {
           ? [...response.json]
           : { ...(response.json as unknown as object) };
 
-      if (data instanceof Array) {
-        for (let i = 0; i < data.length; i++) {
-          const v = omitDeep(
-            data[i],
-            hiddenKeys.map((v) => v.key)
-          );
-
-          data[i] = v;
-        }
-      } else if (typeof data === "object") {
-        const v = { ...data };
-
-        data = omitDeep(
-          v,
-          hiddenKeys.map((v) => v.key)
-        );
-      }
+      data = hideFields(
+        data,
+        hiddenKeys.map((v) => v.key)
+      );
 
       options.callbacks?.onSuccess?.(data);
       return res.status(response.statusCode).json({

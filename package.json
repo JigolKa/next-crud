@@ -1,6 +1,6 @@
 {
   "name": "@jigolka/next-crud",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Automate CRUD operations with Prisma and Next.js!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,6 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@types/jest": "^29.4.0",
-    "@types/lodash.omit": "^4.5.7",
-    "@types/omit-deep-lodash": "^1.1.1"
+    "@types/lodash.omit": "^4.5.7"
   }
 }
