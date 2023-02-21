@@ -1,18 +1,18 @@
-import logging from "../../helpers/logging";
-import { SupportedEncryptionAlgorithms } from "../../types";
-import { AES } from "./algorithms/AES";
-import { decrypt, encrypt } from "./algorithms/TripleDES";
+import logging from "../../helpers/logging"
+import { SupportedEncryptionAlgorithms } from "../../types"
+import { AES } from "./algorithms/AES"
+import { decrypt, encrypt } from "./algorithms/TripleDES"
 
 export function algorithms(
   algorithm: SupportedEncryptionAlgorithms,
   type: "encryption" | "decryption"
   // eslint-disable-next-line
 ): (v: string) => string {
-  const key = process.env["MD5_HASH"];
+  const key = process.env["MD5_HASH"]
 
   if (!key) {
-    logging("BgRed", "MD5_HASH not defined in environnement variables.");
-    throw new Error("MD5_HASH not defined in environnement variables.");
+    logging("BgRed", "MD5_HASH not defined in environnement variables.")
+    throw new Error("MD5_HASH not defined in environnement variables.")
   }
 
   const methods: Record<
@@ -32,13 +32,13 @@ export function algorithms(
       decryption: (v) => decrypt(v, key),
       encryption: (v) => encrypt(v, key),
     },
-  };
+  }
 
-  return methods[algorithm][type];
+  return methods[algorithm][type]
 }
 
-export type MD5Hash = string;
-export type Base64String = string;
-export type BlockSize = 128 | 256;
-export type DESType = "Simple" | "Triple";
-export type HexadecimalString = string;
+export type MD5Hash = string
+export type Base64String = string
+export type BlockSize = 128 | 256
+export type DESType = "Simple" | "Triple"
+export type HexadecimalString = string

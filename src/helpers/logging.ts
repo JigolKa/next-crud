@@ -26,7 +26,7 @@ export const loggingColors = {
   BgCyan: "\x1b[46m",
   BgWhite: "\x1b[47m",
   BgGray: "\x1b[100m",
-};
+}
 
 export default function logging(
   color: keyof typeof loggingColors = "BgRed",
@@ -38,6 +38,6 @@ export default function logging(
       "@jigolka/next-crud",
       loggingColors["Reset"],
       ...args
-    );
+    )
   }
 }

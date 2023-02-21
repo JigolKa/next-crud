@@ -1,6 +1,6 @@
-import { Api, RouteContext } from "../../../types";
-import { getPrimaryKey } from "../../../helpers/dmmf";
-import { ActionOutput } from "..";
+import { Api, RouteContext } from "../../../types"
+import { getPrimaryKey } from "../../../helpers/dmmf"
+import { ActionOutput } from ".."
 
 export default async function fetch(
   _payload: RouteContext,
@@ -17,7 +17,7 @@ export default async function fetch(
         },
         ...filter,
       }),
-    };
+    }
   }
 
   if (
@@ -27,24 +27,24 @@ export default async function fetch(
     const statusCode =
       typeof options.disableGlobalFetching === "object"
         ? options.disableGlobalFetching[table]?.statusCodeToReturn ?? 404
-        : 404;
+        : 404
 
     const errorText =
       typeof options.disableGlobalFetching === "object"
         ? options.disableGlobalFetching[table]?.message ?? "Not found"
-        : "Not found";
+        : "Not found"
 
     return {
       statusCode,
       errorText,
-    };
+    }
   }
 
   const json = await (options.prismaInstance[table].findMany as any)({
     ...filter,
-  });
+  })
   return {
     statusCode: 200,
     json,
-  };
+  }
 }

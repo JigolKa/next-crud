@@ -13,13 +13,13 @@ The fastest way to get started is to create a new file in your **api folder**, a
 ```ts
 // pages/api/[...crud].ts
 
-import ApiWrapper from "@jigolka/next-crud";
+import ApiWrapper from "@jigolka/next-crud"
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client"
 
 export default ApiWrapper({
   prismaInstance: new PrismaClient(),
-});
+})
 ```
 
 Now this function will host the following routes:

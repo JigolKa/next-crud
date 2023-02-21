@@ -1,6 +1,6 @@
-import { Api, RouteContext, Table } from "../../../types";
-import { getPrimaryKey } from "../../../helpers/dmmf";
-import { ActionOutput } from "..";
+import { Api, RouteContext, Table } from "../../../types"
+import { getPrimaryKey } from "../../../helpers/dmmf"
+import { ActionOutput } from ".."
 
 export default async function del(
   _payload: RouteContext,
@@ -12,17 +12,17 @@ export default async function del(
     return {
       statusCode: 422,
       errorText: "Missing required url arguments",
-    };
+    }
 
   const json = await (options.prismaInstance[table as Table].delete as any)({
     where: {
       [getPrimaryKey(table)]: id,
     },
     ...filter,
-  });
+  })
 
   return {
     statusCode: 200,
     json,
-  };
+  }
 }

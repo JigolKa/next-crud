@@ -1,24 +1,24 @@
 /* eslint-disable no-unused-vars */
 
-import { Api, Method, RouteContext } from "../../types";
-import del from "./actions/delete";
-import fetch from "./actions/fetch";
-import update from "./actions/update";
-import create from "./actions/create";
-import verify from "./actions/verify";
+import { Api, Method, RouteContext } from "../../types"
+import del from "./actions/delete"
+import fetch from "./actions/fetch"
+import update from "./actions/update"
+import create from "./actions/create"
+import verify from "./actions/verify"
 
 export type ActionSignature = (
   request: RouteContext,
   args: Api.MethodContext,
   options: Api.GlobalOptions,
   filter: Api.FilterOptions
-) => Promise<ActionOutput>;
+) => Promise<ActionOutput>
 
 export type ActionOutput = {
-  statusCode: number;
-  json?: unknown;
-  errorText?: string;
-};
+  statusCode: number
+  json?: unknown
+  errorText?: string
+}
 
 export default function actionsFactory(
   method: Method,
@@ -29,11 +29,11 @@ export default function actionsFactory(
     POST: create,
     PATCH: update,
     DELETE: del,
-  };
+  }
 
-  if (_verify) return method === "POST" ? verify : null;
+  if (_verify) return method === "POST" ? verify : null
 
-  if (!functions[method]) return null;
+  if (!functions[method]) return null
 
-  return functions[method];
+  return functions[method]
 }

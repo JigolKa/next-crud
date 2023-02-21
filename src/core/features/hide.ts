@@ -1,4 +1,4 @@
-import omitDeep from "../../helpers/exclude";
+import omitDeep from "../../helpers/exclude"
 
 export default function hideFields(
   data: object | object[],
@@ -6,15 +6,15 @@ export default function hideFields(
 ) {
   if (data instanceof Array) {
     for (let i = 0; i < data.length; i++) {
-      const v = omitDeep(data[i], hiddenKeys);
+      const v = omitDeep(data[i], hiddenKeys)
 
-      data[i] = v;
+      data[i] = v
     }
   } else if (typeof data === "object") {
-    const v = { ...data };
+    const v = { ...data }
 
-    data = omitDeep(v, hiddenKeys);
+    data = omitDeep(v, hiddenKeys)
   }
 
-  return data;
+  return data
 }

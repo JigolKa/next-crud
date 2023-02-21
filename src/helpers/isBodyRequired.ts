@@ -1,4 +1,4 @@
-import { Method } from "../types";
+import { Method } from "../types"
 
 export default function isBodyRequired(method: Method) {
   const bodyRequired: Record<Method, boolean> = {
@@ -6,7 +6,7 @@ export default function isBodyRequired(method: Method) {
     GET: false,
     POST: true,
     PATCH: true,
-  };
+  }
 
-  return bodyRequired[method];
+  return bodyRequired[method]
 }
