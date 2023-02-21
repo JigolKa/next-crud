@@ -1,6 +1,6 @@
 {
   "name": "@jigolka/next-crud",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Automate CRUD operations with Prisma and Next.js!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,6 +19,7 @@
   ],
   "author": "JigolKa",
   "license": "MIT",
+  "repository": "https://github.com/JigolKa/next-crud",
   "dependencies": {
     "@prisma/client": "^4.10.1",
     "lodash.omit": "^4.5.0",
