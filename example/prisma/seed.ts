@@ -1,5 +1,5 @@
-import prisma from "./instance";
-import { faker } from "@faker-js/faker";
+import prisma from "./instance"
+import { faker } from "@faker-js/faker"
 
 export default async function seedDatabase() {
   for (let i = 0; i < 10; i++) {
@@ -8,7 +8,7 @@ export default async function seedDatabase() {
         email: faker.internet.email(),
         name: faker.name.firstName(),
       },
-    });
+    })
   }
 
   for (let i = 0; i < 10; i++) {
@@ -21,7 +21,7 @@ export default async function seedDatabase() {
         },
         content: faker.lorem.lines(Math.floor(Math.random() * 5) + 5),
       },
-    });
+    })
   }
 
   for (let i = 0; i < 10; i++) {
@@ -39,8 +39,8 @@ export default async function seedDatabase() {
         },
         content: faker.lorem.lines(Math.floor(Math.random() * 5) + 5),
       },
-    });
+    })
   }
 }
 
-seedDatabase();
+seedDatabase()

@@ -11,8 +11,8 @@ export default ApiWrapper({
       // Here you can check for the validity of a JWT token,
       // retrieve/verify credentials, etc...
       return typeof req.headers["authorization"] !== undefined
-    }
-  }
+    },
+  },
 })
 ```
 
@@ -29,8 +29,8 @@ If you only want your `POST` requests to be authenticated against, you just need
 export default ApiWrapper({
   prismaInstance: new PrismaClient(),
   authentication: {
-    methods: ["POST"]
-  }
+    methods: ["POST"],
+  },
 })
 ```
 
@@ -45,8 +45,8 @@ Try this:
 export default ApiWrapper({
   prismaInstance: new PrismaClient(),
   authentication: {
-    matcher: /.*user$/gm
-  }
+    matcher: /.*user$/gm,
+  },
 })
 ```
 
@@ -60,8 +60,8 @@ If you need to exclude routes from your authentication callback, you can add thi
 export default ApiWrapper({
   prismaInstance: new PrismaClient(),
   authentication: {
-    ignoredRoutes: ["/api/user/abc"]
-  }
+    ignoredRoutes: ["/api/user/abc"],
+  },
 })
 ```
 

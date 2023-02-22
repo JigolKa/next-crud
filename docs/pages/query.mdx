@@ -19,10 +19,10 @@ await prisma.user.findMany({
     id: true,
     comments: {
       select: {
-        text: true
-      }
-    }
-  }
+        text: true,
+      },
+    },
+  },
 })
 ```
 

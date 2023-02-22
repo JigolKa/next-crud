@@ -14,10 +14,10 @@ export default ApiWrapper({
   models: {
     user: {
       creditCard: {
-        hide: true
-      }
-    }
-  }
+        hide: true,
+      },
+    },
+  },
 })
 ```
 
@@ -35,10 +35,10 @@ export default ApiWrapper({
   models: {
     user: {
       password: {
-        encryption: "AES 128"
-      }
-    }
-  }
+        encryption: "AES 128",
+      },
+    },
+  },
 })
 ```
 
@@ -63,11 +63,11 @@ export default ApiWrapper({
           },
           decrypt: (encryptedValue) => {
             return Buffer.from(encryptedValue, "base64").toString("ascii")
-          }
-        }
-      }
-    }
-  }
+          },
+        },
+      },
+    },
+  },
 })
 ```
 
@@ -83,10 +83,10 @@ export default ApiWrapper({
   models: {
     user: {
       isAdmin: {
-        freeze: true
-      }
-    }
-  }
+        freeze: true,
+      },
+    },
+  },
 })
 ```
 
