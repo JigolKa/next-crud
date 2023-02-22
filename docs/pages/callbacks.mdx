@@ -1,0 +1,17 @@
+# Callbacks
+
+You can provide functions to handle differents events.
+
+Here are some availables callbacks:
+
+```ts
+export default ApiWrapper({
+  callbacks: {
+    onError: (error) => console.error(error),
+    onRequest: ({ req, res }) => console.log({ req, res }),
+    onSuccess: (data) => console.log("data: ", data),
+  },
+})
+```
+
+**Note**: This is an example implementation

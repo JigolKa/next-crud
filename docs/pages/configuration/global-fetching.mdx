@@ -1,0 +1,16 @@
+# Global fetching
+
+You can disable *&ldquo;Global fetching&rdquo;* `(GET /api/user)` with this configuration:
+
+```ts
+export default ApiWrapper({
+  disableGlobalFetching: {
+    user: {
+      message: "Not Found",
+      statusCode: 404,
+    },
+  },
+})
+```
+
+When requesting `/api/user`, the response will have a status code of `404` and an error message.

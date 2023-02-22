@@ -1,0 +1,32 @@
+{
+  "name": "docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@mantine/core": "^5.10.4",
+    "@mdx-js/loader": "^2.3.0",
+    "@mdx-js/react": "^2.3.0",
+    "@next/font": "13.1.6",
+    "@next/mdx": "^13.1.6",
+    "@tabler/icons": "^2.4.0",
+    "@types/node": "18.14.0",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "eslint": "8.34.0",
+    "eslint-config-next": "13.1.6",
+    "next": "^13.1.6",
+    "nextra": "^2.2.15",
+    "nextra-theme-docs": "^2.2.15",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remark-breaks": "^3.0.2",
+    "remark-gfm": "^3.0.1",
+    "typescript": "4.9.5"
+  }
+}

@@ -1,14 +1,31 @@
-# Next Crud Automation
+# Next Crud
 
-## What is Next Crud Automation ?
+![NPM version](https://img.shields.io/github/package-json/v/jigolka/next-crud?label=npm)
+![License](https://img.shields.io/npm/l/@jigolka/next-crud)
 
-Next Crud Automation is an **api wrapper for Next.js and Prisma**
+## What is Next Crud ?
 
-This library can be only be used **in a Next.js app** at the moment
+Next Crud is an api wrapper for **Next.js and Prisma** that handle automatically **CRUD endpoints**.
+
+## Documenation
+
+We do not have a documentation at this moment
 
 ## Getting started
 
-The fastest way to get started is to create a new file in your **api folder**, and paste the following code:
+`npm install @jigolka/next-crud`
+
+Given this specific schema:
+
+```sql
+model User {
+  id      String  @id @default(cuid())
+  name    String
+  email   String
+}
+```
+
+Paste the following snippet to get you started:
 
 ```ts
 // pages/api/[...crud].ts
@@ -22,26 +39,16 @@ export default ApiWrapper({
 })
 ```
 
-Now this function will host the following routes:
+This will generate these differents endpoints:
 
-- GET /api/`table`
+| Endpoint               | Description       |
+| ---------------------- | ----------------- |
+| GET `/api/user`        | Get all the users |
+| GET `/api/user/[id]`   | Get one user      |
+| POST `/api/user`       | Create one user   |
+| PATCH `/api/user/[id]` | Update one user   |
+| DELETE`/api/user/[id]` | Delete one user   |
 
-- POST /api/`table`
+## Contributing
 
-- PATCH /api/`table`/`id`
-
-- DELETE /api/`table`/`id`
-
-### Note:
-
-- `table` is the name of the table you want to access. **Lowercase only**
-
-- `id` is the primary key of a record
-
-# Examples
-
-- **GET /api/user** will return a list of records of the user Model
-
-- **PATCH /api/user/1** will update a row where it's primary key is 1
-
-**TODO**: Proper documentation
+Pull requests are welcome!

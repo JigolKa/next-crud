@@ -1,0 +1,14 @@
+*:not(main *) {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+main > * {
+  margin-bottom: 5px;
+}
+
+a.hide {
+  color: inherit;
+  text-decoration: none;
+}

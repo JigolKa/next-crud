@@ -1,7 +1,6 @@
 import { NextApiRequest } from "next"
 import { Table } from "../types"
 import getEndpoint from "./getEndpoint"
-import logging from "./logging"
 
 export interface ParsedArgs {
   table: Table
@@ -12,8 +11,6 @@ export function getArguments(req: NextApiRequest): ParsedArgs | undefined {
   const args = req.query[getEndpoint(req)]
 
   if (!args || args.length === 0 || args.length > 2) return undefined
-
-  logging("BgGreen", args)
 
   return {
     table: args[0] as Table,

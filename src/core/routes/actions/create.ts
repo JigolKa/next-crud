@@ -37,7 +37,7 @@ export default async function create(
     payload[element] = obj ? obj : undefined
   }
 
-  const tables = options.extraOptions
+  const tables = options.models
   const _table = tables?.[table]
 
   if (tables && _table) {

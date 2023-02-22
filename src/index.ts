@@ -104,7 +104,7 @@ function ApiWrapper(options: Api.GlobalOptions): Handler {
       }
     }
 
-    const extraOptions: Record<string, any> = options.extraOptions ?? {}
+    const extraOptions: Record<string, any> = options.models ?? {}
 
     const hiddenKeys: { table: string; key: string }[] = []
     const dontUpdateKeys: { table: string; key: string }[] = []
@@ -117,7 +117,7 @@ function ApiWrapper(options: Api.GlobalOptions): Handler {
           hiddenKeys.push({ table, key })
         }
 
-        if (options.includes("dontUpdate")) {
+        if (options.includes("freeze")) {
           dontUpdateKeys.push({ table, key })
         }
       }

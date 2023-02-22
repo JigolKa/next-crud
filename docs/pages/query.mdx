@@ -1,0 +1,29 @@
+# URL query arguments
+
+You can pass filter arguments through the url parameters, like `include` or `select`.
+Full list of supported arguments: `include`, `select`, `take` and `skip`
+
+Example:
+
+```
+http://localhost:3000/api/user?select=id,comments.text&take=1&skip=2
+```
+
+will result in the following Prisma query:
+
+```ts
+await prisma.user.findMany({
+  take: 1,
+  skip: 2,
+  select: {
+    id: true,
+    comments: {
+      select: {
+        text: true
+      }
+    }
+  }
+})
+```
+
+**Note**: The filter `skip` and `take` are not supported when doing `POST`, `PATCH` and `DELETE` requests.

@@ -1,0 +1,93 @@
+# Options
+
+There are various options that you can use to extend the `ApiWrapper` function to fit your explicit needs.
+
+## Hide fields
+
+Want to hide sensitive data from responses? You are at the right place!
+
+To hide a field, just do the following adjustements to your existing configuration:
+
+```ts
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+  models: {
+    user: {
+      creditCard: {
+        hide: true
+      }
+    }
+  }
+})
+```
+
+Where `creditCard` is a field of the `User` model.
+This will hide the `creditCard` field from **every response**. (In nested objects too)
+
+## Encrypt fields
+
+Are you planning to store passwords, and don't want to store it in plain-text?
+The encryption option is here to help:
+
+```ts
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+  models: {
+    user: {
+      password: {
+        encryption: "AES 128"
+      }
+    }
+  }
+})
+```
+
+You have access to differents built-ins algorithms, which are the following:
+
+```ts
+type SupportedEncryptionAlgorithms = "Triple DES" | "AES 128" | "AES 256"
+```
+
+If you don't want to use those, you can still provide your own solution:
+
+```ts
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+  models: {
+    user: {
+      password: {
+        // Base64 encryption/decryption
+        encryption: {
+          encypt: (plainTextValue) => {
+            return Buffer.from(plainTextValue).toString("base64")
+          },
+          decrypt: (encryptedValue) => {
+            return Buffer.from(encryptedValue, "base64").toString("ascii")
+          }
+        }
+      }
+    }
+  }
+})
+```
+
+The two callbacks `encrypt` and `decrypt` are required if you want to use some custom encryption algorithm.
+
+## Frozen fields
+
+Want to disable edit on peculiar fields? Add the following code in the config:
+
+```ts
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+  models: {
+    user: {
+      isAdmin: {
+        freeze: true
+      }
+    }
+  }
+})
+```
+
+The field `isAdmin` will no longer be editable via `PATCH` requests

@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+find dist/ -type f \
+    -name "*.js"  \
+    -exec echo {} \; \
+    -exec uglifyjs -o {} {} \;

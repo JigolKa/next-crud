@@ -12,10 +12,9 @@ export default async function verify(
   { table: _table }: Api.MethodContext,
   options: Api.GlobalOptions
 ): Promise<ActionOutput> {
-  const { extraOptions } = options
-  const table = extraOptions?.[_table]
-  if (!extraOptions || !table)
-    return { statusCode: 404, errorText: "Not found" }
+  const { models } = options
+  const table = models?.[_table]
+  if (!models || !table) return { statusCode: 404, errorText: "Not found" }
 
   const encryptedFields = Object.keys(table)
 

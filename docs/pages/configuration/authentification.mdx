@@ -1,0 +1,68 @@
+# Authentification
+
+We provide a built-in authentication service, to restrict access to your routes.
+The following code will reject all requests that don't have the `Authorization` header:
+
+```ts
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+  authentication: {
+    callback: (req) => {
+      // Here you can check for the validity of a JWT token,
+      // retrieve/verify credentials, etc...
+      return typeof req.headers["authorization"] !== undefined
+    }
+  }
+})
+```
+
+If you want your user to be authenticated, your callback must return `true`.
+Otherwise a 403 response will be sent back.
+
+**Note**: The parameter `req` is of type `NextApiRequest`
+
+## Specific methods
+
+If you only want your `POST` requests to be authenticated against, you just need to provide an extra property to your configuration:
+
+```ts
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+  authentication: {
+    methods: ["POST"]
+  }
+})
+```
+
+The default value is: `["POST", "PATCH", "DELETE"]`
+
+## URL matcher
+
+Want to authenticate your users only if the route matches a certain pattern?
+Try this:
+
+```ts
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+  authentication: {
+    matcher: /.*user$/gm
+  }
+})
+```
+
+The above example matches all routes that ends with the string `user`
+
+## Ignored routes
+
+If you need to exclude routes from your authentication callback, you can add this option:
+
+```ts
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+  authentication: {
+    ignoredRoutes: ["/api/user/abc"]
+  }
+})
+```
+
+This option will exclude the route `/api/user/abc` from the authentication process

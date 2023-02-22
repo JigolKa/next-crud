@@ -26,7 +26,7 @@ export default async function fetch(
   ) {
     const statusCode =
       typeof options.disableGlobalFetching === "object"
-        ? options.disableGlobalFetching[table]?.statusCodeToReturn ?? 404
+        ? options.disableGlobalFetching[table]?.statusCode ?? 404
         : 404
 
     const errorText =

@@ -1,0 +1,44 @@
+# Next Crud
+
+<span style={{ display: 'inline-block' }}>
+![NPM version](https://img.shields.io/github/package-json/v/jigolka/next-crud?label=npm)
+</span>
+<span style={{ display: 'inline-block', marginLeft: 5 }}>
+![License](https://img.shields.io/npm/l/@jigolka/next-crud)
+</span>
+
+## What is Next Crud ?
+
+Next Crud is an api wrapper for **Next.js and Prisma** that handle automatically **CRUD endpoints**.
+
+It offers multiples features like authentication, hiding fields from responses, etc...
+
+## Installation
+
+You can install the package via the following command:
+
+```
+npm install @jigolka/next-crud
+```
+
+## Quick start
+
+Paste the following snippet to get you started:
+
+```ts
+// pages/api/[...crud].ts
+
+import { ApiWrapper } from "@jigolka/next-crud"
+import { PrismaClient } from "@prisma/client"
+
+export default ApiWrapper({
+  prismaInstance: new PrismaClient(),
+})
+```
+
+It's as simple as that! See [options](/documentation) for full documentation.
+
+## Contributing
+
+Want to contribute/add a feature? **Pull requests are welcome**!
+You can debug your changes by using the example app

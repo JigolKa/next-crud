@@ -57,7 +57,7 @@ export namespace Api {
     /**
      * Prevents any modification to this property (`PATCH` requests)
      */
-    dontUpdate?: boolean
+    freeze?: boolean
 
     /**
      * Hide field from responses body
@@ -99,7 +99,7 @@ export namespace Api {
             Record<
               Table,
               {
-                statusCodeToReturn: number
+                statusCode: number
                 message: string
               }
             >
@@ -109,9 +109,9 @@ export namespace Api {
       /**
        * Add extra options for fields
        *
-       * Current features: `encryption`, `hide` and `dontUpdate`
+       * Current features: `encryption`, `hide` and `freeze`
        */
-      extraOptions: TablesArguments<Table, "create", RowOptions>
+      models: TablesArguments<Table, "create", RowOptions>
 
       /**
        * Main instance of Prisma
@@ -119,7 +119,7 @@ export namespace Api {
       prismaInstance: PrismaClient
 
       /**
-       * Restrict access of your routes
+       * Restrict access to your routes
        */
       authentication: {
         /**
