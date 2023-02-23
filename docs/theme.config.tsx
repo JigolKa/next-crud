@@ -36,6 +36,11 @@ const cfg = {
       <meta name="apple-mobile-web-app-title" content="Next Crud" />
     </>
   ),
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s – Next Crud",
+    }
+  },
   // ...
 }
 
