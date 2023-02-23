@@ -9,7 +9,7 @@ Next Crud is an api wrapper for **Next.js and Prisma** that handle automatically
 
 ## Documenation
 
-We do not have a documentation at this moment
+You can access the full documentation at [next-crud-docs.vercel.app](https://next-crud-docs.vercel.app)
 
 ## Getting started
 
