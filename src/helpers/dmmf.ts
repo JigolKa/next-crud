@@ -11,6 +11,10 @@ export function getPrimaryKey(table: Table): string {
   )
 }
 
+export function getModels(): Table[] {
+  return Prisma.dmmf.datamodel.models.map((v) => v.name as Table)
+}
+
 export function getKeys(table: Table) {
   return Prisma.dmmf.datamodel.models
     .filter((v) => v.name.toLowerCase() === table.toLowerCase())[0]

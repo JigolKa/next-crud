@@ -1,8 +1,9 @@
 import { NextApiRequest } from "next"
 import { ParsedArgs } from "../../helpers/actions"
-import { getKeys, getRelationKeys } from "../../helpers/dmmf"
+import { getKeys, getModels, getRelationKeys } from "../../helpers/dmmf"
 import getEndpoint from "../../helpers/getEndpoint"
 import logging from "../../helpers/logging"
+import capitalize from "../../helpers/string"
 import { json } from "../../helpers/url"
 import { Api, Table } from "../../types"
 
@@ -23,8 +24,6 @@ export default function filter({
   const prismaFilter: Api.FilterOptions = {}
   delete queryArguments[getEndpoint(req)]
 
-  const tableKeys = getKeys(args.table)
-
   for (const filter of Object.keys(queryArguments)) {
     if (!["include", "select", "skip", "take"].includes(filter)) continue
 
@@ -33,22 +32,38 @@ export default function filter({
 
     if (["include", "select"].includes(filter)) {
       for (const key of query.split(",")) {
+        if (!key) continue
+
         const parts = key.split(".")
-        if (!tableKeys.includes(parts[parts.length - 1])) {
+
+        // if (parts.length === 1) logging("BgGreen", args.table)
+
+        const table =
+          parts.length === 1
+            ? args.table
+            : (getModels()
+                .filter((v) =>
+                  parts[parts.length - 2].includes(v.toLowerCase())
+                )[0]
+                .toLowerCase() as Table)
+
+        logging("BgGreen", "key:", key, "model:", table)
+
+        if (!getKeys(table).includes(parts[parts.length - 1])) {
           logging(
             "BgRed",
             "Key `" +
               parts[parts.length - 1] +
-              "` not found on table " +
-              currentTable
+              "` not found on model " +
+              capitalize(table)
           )
           return {
             ...json(404),
             errorText:
               "Key `" +
               parts[parts.length - 1] +
-              "` not found on table " +
-              currentTable,
+              "` not found on model " +
+              capitalize(table),
           }
         }
 
@@ -91,8 +106,6 @@ export default function filter({
 
     prismaFilter[filter] = obj
   }
-
-  console.log(prismaFilter)
 
   if (
     Object.keys(prismaFilter).includes("include") &&

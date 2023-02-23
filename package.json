@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "test": "npx cypress open",
+    "watch": "npx tsc --watch",
     "build": "rm dist -r && npx tsc",
     "lint": "npx prettier --write .",
     "prepublishOnly": "npm run lint && npm run build"

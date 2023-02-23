@@ -12,6 +12,7 @@ import { getKeys, getRelationKeys } from "./helpers/dmmf"
 import logging, { loggingColors } from "./helpers/logging"
 import hideFields from "./core/features/hide"
 import filter, { FilterError } from "./core/features/filter"
+import auth from "./core/features/authentication"
 
 // Typescript will throw a bunch of errors since Prisma has not generated any types
 
@@ -82,26 +83,13 @@ function ApiWrapper(options: Api.GlobalOptions): Handler {
       }
     }
 
-    if (options.authentication?.callback) {
-      const regex = RegExp(options.authentication.matcher ?? /.*/gm)
+    const authResult = await auth(options, req)
 
-      if (
-        regex.test(url) &&
-        (
-          options.authentication.methods || ["POST", "PATCH", "DELETE"]
-        ).includes(method as Method) &&
-        !(options.authentication.ignoredRoutes || []).includes(url)
-      ) {
-        const callbackResult = await options.authentication.callback({ req })
-
-        if (!callbackResult) {
-          logging("BgRed", "Access forbidden")
-
-          return res
-            .status(403)
-            .json({ ...json(403), errorText: "Access forbidden" })
-        }
-      }
+    if (typeof authResult !== "boolean" && authResult.statusCode === 403) {
+      return res.status(403).json({
+        ...json(403),
+        errorText: authResult.errorText,
+      })
     }
 
     const extraOptions: Record<string, any> = options.models ?? {}
@@ -181,6 +169,7 @@ function ApiWrapper(options: Api.GlobalOptions): Handler {
       )
 
       options.callbacks?.onSuccess?.(data)
+
       return res.status(response.statusCode).json({
         ...json(response.statusCode),
         ...(response.errorText ? { error: response.errorText } : {}),
