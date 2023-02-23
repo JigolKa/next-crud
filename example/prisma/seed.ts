@@ -7,6 +7,7 @@ export default async function seedDatabase() {
       data: {
         email: faker.internet.email(),
         name: faker.name.firstName(),
+        password: faker.internet.password(),
       },
     })
   }
@@ -15,24 +16,6 @@ export default async function seedDatabase() {
     await prisma.post.create({
       data: {
         author: {
-          connect: {
-            id: Math.floor(Math.random() * 9) + 1,
-          },
-        },
-        content: faker.lorem.lines(Math.floor(Math.random() * 5) + 5),
-      },
-    })
-  }
-
-  for (let i = 0; i < 10; i++) {
-    await prisma.comment.create({
-      data: {
-        author: {
-          connect: {
-            id: Math.floor(Math.random() * 9) + 1,
-          },
-        },
-        post: {
           connect: {
             id: Math.floor(Math.random() * 9) + 1,
           },

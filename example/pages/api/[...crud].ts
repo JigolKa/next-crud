@@ -4,16 +4,16 @@ import prisma from "prisma/instance"
 export default ApiWrapper({
   prismaInstance: prisma,
   models: {
-    post: {
-      author: {
+    user: {
+      password: {
+        encryption: "AES 256",
         hide: true,
+      },
+      isAdmin: {
         freeze: true,
+        hide: true,
       },
     },
   },
-  callbacks: {
-    onError: (error) => console.error(error),
-    onRequest: ({ req, res }) => console.log({ req, res }),
-    onSuccess: (data) => console.log("data: ", data),
-  },
+  callbacks: {},
 })
