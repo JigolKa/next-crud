@@ -11,7 +11,10 @@ export function algorithms(
   const key = process.env["MD5_HASH"]
 
   if (!key) {
-    logging("BgRed", "MD5_HASH not defined in environnement variables.")
+    logging(
+      "BgRed",
+      "MD5_HASH not defined in environnement variables. You must define first a secret which will then be used in the encryption process."
+    )
     throw new Error("MD5_HASH not defined in environnement variables.")
   }
 
