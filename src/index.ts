@@ -1,15 +1,14 @@
+// Typescript will throw a bunch of error since Prisma has not generated any types
+//@ts-nocheck
 import type { NextApiRequest, NextApiResponse } from "next"
 import actionsFactory from "./core/routes"
-import { Api, Method, Table } from "./types"
+import { Api, Method } from "./types"
 import { getArguments } from "./helpers/actions"
 import isBodyRequired from "./helpers/isBodyRequired"
 import { Prisma } from "@prisma/client"
 import { json } from "./helpers/url"
-import getEndpoint from "./helpers/getEndpoint"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime"
-import omitDeep from "./helpers/exclude"
-import { getKeys, getRelationKeys } from "./helpers/dmmf"
-import logging, { loggingColors } from "./helpers/logging"
+import logging from "./helpers/logging"
 import hideFields from "./core/features/hide"
 import filter, { FilterError } from "./core/features/filter"
 import auth from "./core/features/authentication"
@@ -22,7 +21,7 @@ type Handler = (
 ) => Promise<void>
 
 function ApiWrapper(options: Api.GlobalOptions): Handler {
-  if (typeof Prisma["dmmf"] === "undefined") {
+  if (typeof (Prisma as any).dmmf === "undefined") {
     logging(
       "BgRed",
       "Prisma types are not generated. Please enter `npx prisma generate` to create new types."

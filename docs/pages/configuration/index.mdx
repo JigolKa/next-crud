@@ -73,6 +73,20 @@ export default ApiWrapper({
 
 The two callbacks `encrypt` and `decrypt` are required if you want to use some custom encryption algorithm.
 
+**Note**: To decrypt your fields, we have a factory function which maps the algorithm to a decrypt/encrypt callback. Just add this:
+
+```ts
+import { algorithms } from "@jigolka/next-crud/core/encryption"
+
+algorithms("AES 128", "decrypt")("textToDecrypt")
+```
+
+The first argument is of type `SupportedEncryptionAlgorithms`, which look like the following:
+
+```ts
+export type SupportedEncryptionAlgorithms = "Triple DES" | "AES 128" | "AES 256"
+```
+
 ## Frozen fields
 
 Want to disable edit on peculiar fields? Add the following code in the config:
