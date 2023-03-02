@@ -36,7 +36,11 @@ export default function filter({
 
         const parts = key.split(".")
 
-        // if (parts.length === 1) logging("BgGreen", args.table)
+        if (parts.length > 2)
+          return {
+            ...json(422),
+            errorText: "3 levels deep relations are not supported",
+          }
 
         const table =
           parts.length === 1
